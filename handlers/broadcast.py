@@ -1,3 +1,5 @@
+import logging
+
 from bot import bot
 from database import load_users
 from config import ADMIN_IDS
@@ -8,8 +10,10 @@ broadcast_data = set()
 @bot.callback_query_handler(func=lambda call: call.data == "admin_broadcast")
 def start_broadcast(call):
     if call.from_user.id not in ADMIN_IDS:
+        logging.warning("Unauthorized admin_broadcast attempt from %s", call.from_user.id)
         return
     broadcast_data.add(call.from_user.id)
+    logging.info("Admin %s started a broadcast", call.from_user.id)
     bot.send_message(call.message.chat.id, "📣 Reklama matnini yuboring yoki rasm yuboring.")
 
 
@@ -31,6 +35,7 @@ def collect_broadcast(message):
     else:
         text = message.text or ""
 
+    logging.info("Admin %s submitted broadcast content (photo=%s)", uid, bool(photo))
     send_broadcast(uid, text, photo)
     broadcast_data.discard(uid)
 
@@ -46,7 +51,8 @@ def send_broadcast(admin_id, text, photo=None):
             else:
                 bot.send_message(user, text)
             sent += 1
-        except:
+        except Exception as exc:
+            logging.error("Failed to broadcast to user %s: %s", user, exc)
             failed += 1
 
     bot.send_message(
