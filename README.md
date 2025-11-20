@@ -36,6 +36,13 @@ python main.py
 - `database.py` – SQLite helpers (auto-creates `users` table).
 - `users.db` – generated automatically; ignored by Git.
 
+## Testing
+Install dev deps (`pip install -r requirements.txt`) and run:
+```bash
+pytest
+```
+Current coverage validates the SQLite user store; extend with handler tests as needed.
+
 ## Tips & Next Steps
 - When adding new channels or admins, just update `.env` and restart the bot.
 - Consider batching broadcasts or adding rate-limiting if the user base grows large.
