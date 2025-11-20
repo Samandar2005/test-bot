@@ -1,9 +1,11 @@
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
 from config import REQUIRED_CHANNELS
 
-def channels_keyboard():
+
+def channels_keyboard(channels=None):
     kb = InlineKeyboardMarkup()
-    for ch in REQUIRED_CHANNELS:
+    channels = channels if channels else REQUIRED_CHANNELS
+    for ch in channels:
         kb.add(InlineKeyboardButton(
             f"➕ {ch} obuna bo‘lish",
             url=f"https://t.me/{ch.replace('@','')}"
